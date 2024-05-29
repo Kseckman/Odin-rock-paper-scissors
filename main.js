@@ -1,39 +1,34 @@
-// calculate computer selection getComputerChoice
-// allow user to input selection and verify getHumanChoice
-// write function to allow a single game to play
-// function should take player selection and computer selection
-// function should declaire a winner
+const resultsDiv = document.querySelector('.results');
+const WinnerMsg = document.querySelector('.Winner-msg');
+const playerTally = document.querySelector('.player-score');
+const computerTally = document.querySelector('.computer-score');
+const resultsMsg= document.getElementById("results-msg");
+const rockBtn = document.getElementById("rock-btn");
+const paperBtn = document.getElementById("paper-btn");
+const scissorsBtn = document.getElementById("scissors-btn");
+
+rockBtn.addEventListener("click", function () {
+    console.log('rock')
+    showGame("rock");
+});
+  
+paperBtn.addEventListener("click", function () {
+    showGame("paper");
+});
+  
+scissorsBtn.addEventListener("click", function () {
+    showGame("scissors");
+});
 
 const options = ['rock','paper','scissors'];
-
-
-// write computer choice function that returns rock paper scissors.
+let humanScore = 0;
+let computerScore = 0;
 
 function getComputerChoice(){
-// random selection
 const choice = options[Math.floor(Math.random()*options.length)]
 return choice;
 }
 
-//human choice
-function getHumanChoice(){
-    //validate choice/ use prompt to get choice input
-    let isValid = false;
-    //loop to continue asking until an option is picked
-    while( !isValid){
-        let humanChoice = prompt('rock, paper, scissors')
-        if(humanChoice == null){
-            continue;
-        }
-        let lowerCaseChoice = humanChoice.toLocaleLowerCase()
-        if(options.includes(lowerCaseChoice)){
-            isValid= true;
-            return lowerCaseChoice;
-        }
-    }
-}
-
-//winner
 function isWinner(humanChoice, computerChoice){
     if(
         (humanChoice === "rock" && computerChoice === "scissors") ||
@@ -48,42 +43,28 @@ function isWinner(humanChoice, computerChoice){
       }
 }
 
-
-function playRound(humanChoice, computerChoice){
+function playRound(humanChoice){
+    const computerChoice = getComputerChoice();
     const result = isWinner(humanChoice, computerChoice);
-    if(result == 'Tie'){
-        return 'Its a tie!'
-    } else if(result == 'Player'){
-        return ` You Win! ${humanChoice} beats ${computerChoice}`
-    } else {
-        return ` You lose! ${computerChoice} beats ${humanChoice}`
-    }
-}
-
-
-function playGame(){
-    let humanScore = 0;
-    let computerScore = 0;
-    console.log('Welcome to the game')
-    for(let i=0; i <5;i++){
-        const humanSelection = getHumanChoice();
-        const computerSelection = getComputerChoice();
-        console.log(playRound(humanSelection, computerSelection));
-        console.log('--------------')
-        if(isWinner((humanSelection, computerSelection ) === 'Player')){
+        if(result == 'Tie'){
+            console.log('tie')
+            return 'Its a tie!'
+        } else if(result == 'Player'){
             humanScore ++
-        } else if(isWinner(humanSelection,computerSelection ) === 'Computer'){
+            console.log(`player wins ${humanScore}`)
+            return ` You Win! ${humanChoice} beats ${computerChoice}`
+        } else {
             computerScore ++
+            console.log(`computer wins ${computerScore}`)
+            return ` You lose! ${computerChoice} beats ${humanChoice}`
         }
-    }
-    console.log('gameOver')
-    if(humanScore > computerScore){
-        console.log('YOU WIN')
-    } else if(computerScore > humanScore){
-        console.log('YOU LOSE')
-    } else{
-        console.log('Its A tie')
-    }
 }
 
-playGame()
+function showGame(humanChoice){
+  resultsMsg.innerText = playRound(humanChoice)
+    playerTally.innerText = humanScore;
+    computerTally.innerText = computerScore;
+    if(humanScore === 5 || computerScore ===5){
+      WinnerMsg.innerText = `${humanScore ===5 ? 'Player': 'Computer'} has won the game!`;
+    }
+}
